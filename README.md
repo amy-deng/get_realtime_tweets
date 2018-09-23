@@ -8,7 +8,7 @@
 * Python 2 or 3
 
 ## Packages
-#### tweepy, json 
+* tweepy, json 
 
 ## Personalize
 * set params 

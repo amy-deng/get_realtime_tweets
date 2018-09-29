@@ -15,7 +15,7 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-save_file = open('raw_tweets_18_09_28_3.json','a')
+save_file = open('raw_tweets.json','a')
 
 
 class StdOutListener(StreamListener):
@@ -39,7 +39,7 @@ class StdOutListener(StreamListener):
         if (time.time()-self.time) >= self.limit:
             print('Time is over')
             return False
-        elif status_code == 401:
+        elif status == 401:
             # If the error code is 401, which is the error for bad credentials
             print('Encountered error with status code:', status_code)
             return False

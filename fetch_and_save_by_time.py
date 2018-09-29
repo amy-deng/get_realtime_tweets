@@ -39,9 +39,9 @@ class StdOutListener(StreamListener):
         if (time.time()-self.time) >= self.limit:
             print('Time is over')
             return False
-        elif status == 401:
+        else:
             # If the error code is 401, which is the error for bad credentials
-            print('Encountered error with status code:', status_code)
+            print('Encountered error with status code:', status)
             return False
 
     # When a deleted tweet appears

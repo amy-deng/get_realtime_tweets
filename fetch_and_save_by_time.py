@@ -6,16 +6,16 @@ import time
 from tweepy.streaming import StreamListener
 from tweepy import Stream
 
-consumer_key = 'cgJjHjXiZuIcKvrTg22PPdZdE'
-consumer_secret = '3voh2dvLpZDZsG9ov6FOEHS3baS9g4syorraE1IhhYFiL8w55j'
-access_token = '3810742695-IK89MzHkUGnDGzLPrgBmDVFlHUODbfLzPwIOJNs'
-access_token_secret = '8znCM24sT1GK3aMwUEXxiR65Ze4x8a6VvwCyb18SthHyh'
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-save_file = open('raw_tweets_18_09_27.json','a')
+save_file = open('raw_tweets_18_09_28_3.json','a')
 
 
 class StdOutListener(StreamListener):
@@ -30,9 +30,10 @@ class StdOutListener(StreamListener):
             if "delete" not in json_data: #  first level keys
                 print(data)
                 save_file.write(data)
-        else:
-            return False
-        return True
+            return True
+        
+        return False
+        
 
     def on_error(self, status):
         if (time.time()-self.time) >= self.limit:
@@ -61,7 +62,7 @@ class StdOutListener(StreamListener):
         print(exception)
         return
 
-stream = Stream(auth, StdOutListener(time.time(),60))
+stream = Stream(auth, StdOutListener(time.time(),3600))
 # parameter language, location ????
 stream.filter(languages=['en'],track=['the','i','to','a','and','is','in','it','you','of'])
 # stream.sample()

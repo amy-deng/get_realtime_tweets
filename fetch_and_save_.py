@@ -5,6 +5,7 @@ import sys
 import time
 from tweepy.streaming import StreamListener
 from tweepy import Stream
+from urllib3.exceptions import ProtocolError
 
 consumer_key = ''
 consumer_secret = ''
@@ -15,7 +16,8 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-save_file = open('raw_tweets.json','a')
+file_name = time.strftime('%Y-%m-%d', time.localtime())
+save_file = open('crime/'+file_name+'.json','a')
 
 
 class StdOutListener(StreamListener):
@@ -28,7 +30,7 @@ class StdOutListener(StreamListener):
         if (time.time()-self.time) < self.limit:
             json_data = json.loads(data)
             if "delete" not in json_data: #  first level keys
-                print(data)
+                print(data[:71])
                 save_file.write(data)
             return True
         
@@ -62,7 +64,12 @@ class StdOutListener(StreamListener):
         print(exception)
         return
 
-stream = Stream(auth, StdOutListener(time.time(),3600))
-# parameter language, location ????
-stream.filter(languages=['en'],track=['the','i','to','a','and','is','in','it','you','of'])
-# stream.sample()
+
+stream = Stream(auth, StdOutListener(time.time(),5600))
+file = open('words_one_word_one_line.txt').read() # or "a+", whatever you need
+words = file.split("\n") # check last one which might be '' in some version of python
+while True:
+    try:
+      stream.filter(languages=['en'], track=words, stall_warnings=True)
+    except ProtocolError:
+        continue
